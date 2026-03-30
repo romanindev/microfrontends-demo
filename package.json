@@ -1,0 +1,20 @@
+{
+  "name": "microfrontends-demo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev:host": "npm run dev -w host",
+    "dev:catalog": "npm run build:watch -w catalog",
+    "preview:catalog": "npm run preview -w catalog",
+    "dev:cart": "npm run build:watch -w cart",
+    "preview:cart": "npm run preview -w cart"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "engines": {
+    "node": ">=20"
+  }
+}
