@@ -1,11 +1,13 @@
-import type { RemotesConfig, RemoteName } from "../types/remotes";
+import type { RemoteName } from "../types/remotes";
+
+type RemotesConfig = Record<RemoteName, string>;
 
 let remotesConfig: RemotesConfig | null = null;
 
 export function setRemotesConfig(config: RemotesConfig) {
   remotesConfig = config;
+  window.__remotes_config__ = config;
 }
-
 export function getRemoteUrl(remoteName: RemoteName): string {
   if (!remotesConfig) {
     throw new Error("Remotes config has not been initialized");

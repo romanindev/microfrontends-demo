@@ -8,10 +8,6 @@ export default defineConfig({
     react(),
     federation({
       name: 'host',
-      remotes: {
-        catalog: 'http://localhost:4173/assets/remoteEntry.js',
-        cart: 'http://localhost:4174/assets/remoteEntry.js'
-      },
       shared: ['react', 'react-dom', 'react-router-dom'],
     })
   ],
@@ -22,5 +18,8 @@ export default defineConfig({
   },
   server: {
     port: 5175
-  }
+  },
+  preview: {
+    port: 4175,
+  },
 })

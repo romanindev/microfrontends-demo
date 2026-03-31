@@ -1,15 +1,18 @@
-const loadedScripts = new Set<string>();
+const loadedScripts = new Map<string, Promise<void>>();
 
 export function loadRemoteScript(url: string): Promise<void> {
-  if (loadedScripts.has(url)) {
-    return Promise.resolve();
+  const existing = loadedScripts.get(url);
+
+  if (existing) {
+    return existing;
   }
 
-  return new Promise((resolve, reject) => {
-    const existingScript = document.querySelector(`script[src="${url}"]`);
+  const promise = new Promise<void>((resolve, reject) => {
+    const existingScript = document.querySelector(
+      `script[data-remote-entry="${url}"]`
+    ) as HTMLScriptElement | null;
 
     if (existingScript) {
-      loadedScripts.add(url);
       resolve();
       return;
     }
@@ -18,16 +21,15 @@ export function loadRemoteScript(url: string): Promise<void> {
     script.src = url;
     script.type = "text/javascript";
     script.async = true;
+    script.dataset.remoteEntry = url;
 
-    script.onload = () => {
-      loadedScripts.add(url);
-      resolve();
-    };
-
-    script.onerror = () => {
-      reject(new Error(`Failed to load remote script: ${url}`));
-    };
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(`Failed to load remote script: ${url}`));
 
     document.head.appendChild(script);
   });
+
+  loadedScripts.set(url, promise);
+
+  return promise;
 }

@@ -6,11 +6,13 @@ import { loadRemotesConfig } from "./config/loadRemotes";
 import { setRemotesConfig } from "./config/remotesRuntime";
 
 async function bootstrap() {
+  const root = ReactDOM.createRoot(document.getElementById("root")!);
+
   try {
     const config = await loadRemotesConfig();
     setRemotesConfig(config);
 
-    ReactDOM.createRoot(document.getElementById("root")!).render(
+    root.render(
       <React.StrictMode>
         <BrowserRouter>
           <App />
@@ -20,9 +22,7 @@ async function bootstrap() {
   } catch (error) {
     console.error("Failed to bootstrap host", error);
 
-    ReactDOM.createRoot(document.getElementById("root")!).render(
-      <div style={{ padding: 16 }}>Failed to start application</div>,
-    );
+    root.render(<div style={{ padding: 16 }}>Failed to start application</div>);
   }
 }
 
