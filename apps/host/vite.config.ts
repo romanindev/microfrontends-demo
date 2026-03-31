@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
+import packageJson from "./package.json";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,6 +16,10 @@ export default defineConfig({
       shared: ['react', 'react-dom', 'react-router-dom'],
     })
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify(packageJson.version),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   build: {
     target: 'esnext',
     minify: false,

@@ -6,6 +6,8 @@ import MainLayout from "./layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 
 import { safeLazy } from "./utils/safeLazy";
+import { VersionPanel } from "./components/VersionPanel";
+import { useBuildInfo } from "./hooks/useBuildInfo";
 
 import type { CatalogProduct } from "catalog/CatalogPage";
 import type { CartItem } from "cart/CartPage";
@@ -15,6 +17,7 @@ const CartPage = safeLazy(() => import("cart/CartPage"), "cart");
 
 export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const buildInfoItems = useBuildInfo();
 
   const handleAddToCart = (product: CatalogProduct) => {
     setCartItems((currentItems) => {
@@ -38,6 +41,7 @@ export default function App() {
   );
 
   return (
+    <>
     <Routes>
       <Route path="/" element={<MainLayout cartCount={cartCount} />}>
         <Route index element={<HomePage />} />
@@ -63,5 +67,7 @@ export default function App() {
         />
       </Route>
     </Routes>
+      <VersionPanel items={buildInfoItems} />
+    </>
   );
 }
