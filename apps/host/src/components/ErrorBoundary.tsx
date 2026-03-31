@@ -1,15 +1,24 @@
-import React from 'react'
+import React from "react";
+import type { PropsWithChildren } from "react";
+
+type ErrorBoundaryProps = PropsWithChildren<{
+  fallback: React.ReactNode;
+}>;
+
+type ErrorBoundaryState = {
+  hasError: boolean;
+};
 
 class ErrorBoundary extends React.Component<
-  { fallback: React.ReactNode },
-  { hasError: boolean }
+  ErrorBoundaryProps,
+  ErrorBoundaryState
 > {
-  constructor(props: any) {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): ErrorBoundaryState {
     return { hasError: true };
   }
 
