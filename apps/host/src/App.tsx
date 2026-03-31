@@ -5,13 +5,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import MainLayout from "./layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 
-import { safeLazy } from "./utils/safeLazy";
+import { safeLazyWithRuntimeConfig } from "./utils/safeLazyWithRuntimeConfig";
 
 import type { CatalogProduct } from "catalog/CatalogPage";
 import type { CartItem } from "cart/CartPage";
+import { getRemoteUrl } from "./config/remotesRuntime";
 
-const CatalogPage = safeLazy(() => import("catalog/CatalogPage"), 'CatalogPage');
-const CartPage = safeLazy(() => import("cart/CartPage"), 'CartPage');
+const CatalogPage = safeLazyWithRuntimeConfig('catalog', getRemoteUrl, () => import("catalog/CatalogPage"));
+const CartPage = safeLazyWithRuntimeConfig('cart', getRemoteUrl, () => import("cart/CartPage"));
 
 export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);

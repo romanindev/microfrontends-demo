@@ -14,7 +14,7 @@ export default function MainLayout({ cartCount = 0 }: MainLayoutProps) {
   const location = useLocation();
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh', maxWidth: '720px', margin: '0 auto' }}>
       <header
         style={{
           padding: '20px 24px',
