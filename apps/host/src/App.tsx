@@ -1,27 +1,30 @@
-import { lazy, useMemo, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import RemoteLoader from './components/RemoteLoader';
-import MainLayout from './layouts/MainLayout';
-import HomePage from './pages/HomePage';
+import { useMemo, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import RemoteLoader from "./components/RemoteLoader";
+import ErrorBoundary from "./components/ErrorBoundary";
+import MainLayout from "./layouts/MainLayout";
+import HomePage from "./pages/HomePage";
 
-import type { CatalogProduct } from 'catalog/CatalogPage';
-import type { CartItem } from 'cart/CartPage';
+import { safeLazy } from "./utils/safeLazy";
 
-const CatalogPage = lazy(() => import('catalog/CatalogPage'));
-const CartPage = lazy(() => import('cart/CartPage'));
+import type { CatalogProduct } from "catalog/CatalogPage";
+import type { CartItem } from "cart/CartPage";
+
+const CatalogPage = safeLazy(() => import("catalog/CatalogPage"), 'CatalogPage');
+const CartPage = safeLazy(() => import("cart/CartPage"), 'CartPage');
 
 export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const handleAddToCart = (product: CatalogProduct) => {
-    setCartItems(currentItems => {
-      const existingItem = currentItems.find(item => item.id === product.id);
+    setCartItems((currentItems) => {
+      const existingItem = currentItems.find((item) => item.id === product.id);
 
       if (existingItem) {
-        return currentItems.map(item =>
+        return currentItems.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
-            : item
+            : item,
         );
       }
 
@@ -31,7 +34,7 @@ export default function App() {
 
   const cartCount = useMemo(
     () => cartItems.reduce((sum, item) => sum + item.quantity, 0),
-    [cartItems]
+    [cartItems],
   );
 
   return (
@@ -41,17 +44,21 @@ export default function App() {
         <Route
           path="catalog"
           element={
-            <RemoteLoader>
+          <ErrorBoundary fallback={<div>Catalog crashed</div>}>
+            <RemoteLoader fallback="Loading catalog...">
               <CatalogPage onAddToCart={handleAddToCart} />
             </RemoteLoader>
+          </ErrorBoundary>
           }
         />
         <Route
           path="cart"
           element={
-            <RemoteLoader>
+            <ErrorBoundary fallback={<div>Cart crashed</div>}>
+            <RemoteLoader fallback="Loading cart...">
               <CartPage items={cartItems} />
             </RemoteLoader>
+            </ErrorBoundary>
           }
         />
       </Route>
